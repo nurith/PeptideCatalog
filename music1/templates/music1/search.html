@@ -1,0 +1,16 @@
+{%extends 'music1/base.html'%}
+{% load django_tables2 %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{%load staticfiles%}
+{%block body%}
+{% load tag_library %}
+
+<div class="container">
+<form action="" method="get"> 
+{% crispy filter.form filter.form.helper %} 
+<input type="submit" value="Search"/> 
+</form> 
+
+</div>
+{%endblock%}

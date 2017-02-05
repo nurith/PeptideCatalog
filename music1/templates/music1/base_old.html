@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Peptide Catalog</title>
+	{%load staticfiles%}
+	<link rel="stylesheet" href="{% static 'music1/tablesorter/themes/blue/style.css' %}" type="text/css" media="print, projection, screen" />
+ <script type="text/javascript" src="{% static 'music1/tablesorter/jquery-latest.js' %}"/></script> 
+<script type="text/javascript" src="{% static 'music1/tablesorter/jquery.tablesorter.js' %}"/></script>
+<script type="text/javascript" src="{% static 'music1/tablesorter/Addons/pager/jquery.tablesorter.pager.js' %}"/></script>
+<script type="text/javascript" src="js/chili/chili-1.8b.js"></script>
+<script type="text/javascript" src="js/docs.js"></script>
+	<link rel="stylesheet" href= "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="{% static 'music1/style.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'music1/query.dataTables.min.css' %}"/>
+<!--	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>--
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
+
+ <style type="text/css">
+    table {
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 5px 10px;
+      border: 1px solid #999;
+    }
+    th {
+      background-color: #eee;
+    }
+   
+  </style>
+<script type="text/javascript">
+	$(function() {
+		$("#myTable")
+			.tablesorter({ widgets: ['zebra']});
+	});
+ 
+</script>
+</head>
+<body>
+	<nav class= "navbar navbar-inverse">
+	<div class="container-fluid">	
+		<!--header-->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class ="navbar-brand" href="{% url 'music1:index' %}"> Home </a>
+		</div>
+
+		<!--Item-->
+		<div class="collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li class= "">
+					<a href=" {% url 'music1:database' %}">
+						<span class="" aria-hidden="true"></span>&nbsp; Database
+					</a>
+				</li>
+				<li class= "">
+					<a href=" #">
+						<span class="" aria-hidden="true"></span>&nbsp;Blog
+					</a>
+				</li>
+                <li class= "">
+                <a href=" #">
+                <span class="" aria-hidden="true"></span>&nbsp;Help
+                </a>
+                </li>
+                <li class= "">
+                <a href=" {% url 'music1:contact' %}">
+                <span class="" aria-hidden="true"></span>&nbsp;Contact Us
+                </a>
+                </li>
+			</ul>
+		</div>
+	</div>
+	</nav>
+{%block body%}
+{%endblock%}
+</body>
+</html>

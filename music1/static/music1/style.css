@@ -1,0 +1,50 @@
+body{
+    background: #f8f8f8;
+}
+
+.navbar{
+    border-radius: 0; 
+}
+
+.navbar{
+    font-family: 'Arial', cursive;
+   
+}
+.button {
+ border: none;
+ background: #f9f9f9;
+ }
+
+.arrow-up-empty {
+  width: 0; 
+  height: 0; 
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent; 
+  border-bottom: 8px solid #999999;
+}
+
+.arrow-down-empty {
+  width: 0; 
+  height: 0; 
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+
+  border-top: 8px solid #999999;
+}
+.arrow-up {
+  width: 0; 
+  height: 0; 
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  padding-bottom: 50px;
+  border-bottom: 8px solid black;
+}
+
+.arrow-down {
+  width: 0; 
+  height: 0; 
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  
+  border-top: 8px solid black;
+}

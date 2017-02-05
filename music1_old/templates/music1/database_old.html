@@ -1,0 +1,194 @@
+{%extends 'music1/base.html'%}
+{%load staticfiles%}
+{%block body%}
+{% load tag_library %}
+{% load dosearch %}
+{% load append %}
+{% load append1 %}
+{% load check_box %}
+
+<div class="container">
+
+<br>
+    Lines to display:
+<select name="change_row_control" id="change_row_control" value= "{{row}}" onchange="changeRow()">
+    <option value="10">10</option>
+    <option value="25">25</option>
+    <option value="50">50</option>
+    <option value="75">75</option>
+    <option value="100">100</option>
+    <option value="150">150</option>
+    <option value="200">200</option>
+    <option value="300">300</option>
+    <option value="500">500</option>
+    <option value="1000">1000</option>
+    <option value="2000">2000</option>
+    <option value="All">All</option>
+</select>
+
+    search:
+
+<input type="search" name="search_control" id="search_control" onkeyup="keyDownInSearch(event)">
+    <input type="button" name="search_go_control" id="search_go_control" value="go" onclick="changeSearch()">
+        <br>
+
+<br>
+
+</div>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+  {% if protein_list.has_other_pages %}
+  <ul class="pagination">
+    {% if protein_list.has_previous %}
+      <li><a href="?page={{ protein_list.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in protein_list.paginator.page_range %}
+      {% if protein_list.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% elif i < protein_list.number|add:5 and i > protein_list.number|add:"-5"  %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if protein_list.has_next %}
+      <li><a href="?page={{ protein_list.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+
+            <table id="myTable" class="tablesorter">
+                <thead>
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                  <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+                    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+                    <tr>
+                        <th><button class="button" name="sort_protein_id" id="sort_control_protein_id" value="protein_id" 
+						       onclick="changeSort('protein_id')">ProteinID</button></th>
+                        <th>
+			    <button class="button" name="sort_peptide_db" value="peptidedb_id" id="sort_control_peptidedb" 
+				    onclick="changeSort('peptidedb')"> PeptidedbID</button></th>
+                        <th data-sort="string"><button class="button" name="sort_uniprot" value="uniprot_id" id="sort_control_uniprot" 
+				    onclick="changeSort('uniprot')">uniprotID</th>
+                        <th data-sort="string"><button class="button" name="sort_endonet" value="endonet_link" id="sort_control_endonet" 
+				    onclick="changeSort('endonet')">Endonet Link</th>
+                        <th><button class="button" name="sort_know_fragments" value="know_fragments" id="sort_control_fragments" 
+				    onclick="changeSort('fragments')">Known Fragments</th>
+                        <th> <button class="button" name="sort_hormone" value="hormone" id="sort_control_hormone" 
+				    onclick="changeSort('hormone')">Hormone</th>
+                        <th><button class="button" name="sort_pro_peptide" value="pro_peptide" id="sort_control_propeptide" 
+				    onclick="changeSort('propeptide')">Pro-Peptide</th>
+                        <th>Transcript</th>
+                        <th>Peptide Name</th>
+                        <th>Fasta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for protein in protein_list %}
+                    <tr>
+                        {% if row == "All" and protein|dosearch:search  %}
+                        <td data-sort-value="{{protein.protein_id}}">{{protein.protein_id | get_detail| safe}} </td>
+                        <td>{{protein.peptidedb_id|get_href1 |safe}}</td>
+                        <td>{{protein.uniprot_id|get_href |safe}}</td>
+                        <td>{{protein.endonet_link|get_href_endo |safe}}</td>
+                        <td  class="center">{{protein.know_fragments|yesno:"Yes,No" }}</td>
+                        <td  class="center">{{protein.hormone|yesno:"Yes,No"}} </td>
+                        <td  class="center">{{protein.pro_peptide|yesno:"Yes,No" }} </td>
+                        <td  class="center">{{protein.transcript|yesno:"Yes,No" }}</td>
+                        <td>{{protein.peptide_name }} </td>
+                        <td>{{protein.protein_id | get_checkbox | safe}}</td>
+                        
+                    </tr>
+                        {% elif forloop.counter0 < row|to_int %}
+                        <tr>
+                        <td data-sort-value="{{protein.protein_id}}">
+			  {{protein.protein_id | get_detail| safe}} </td>
+                        <td>{{protein.peptidedb_id|get_href1 |safe }}</td>
+                        <td>{{protein.uniprot_id|get_href |safe}}</td>
+                        <td data-sort-value="{{protein.endolnet_link}}">{{protein.endonet_link|get_href_endo |safe}}</td>
+                        <td  class="center">{{protein.know_fragments|yesno:"Yes,No" }}</td>
+                        <td  class="center">{{protein.hormone|yesno:"Yes,No"}} </td>
+                        <td  class="center">{{protein.pro_peptide|yesno:"Yes,No" }} </td>
+                        <td  class="center">{{protein.transcrip|yesno:"Yes,No" }}</td>
+                        <td>{{protein.peptide_name}} </td>
+                        <td>{{protein.protein_id| get_checkbox | safe}}</td>
+                        
+                        {%endif%}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+  
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+    
+    var ascend=1;
+    document.getElementById("change_row_control").value="{{row}}";
+    document.getElementById("search_control").value="{{search}}";
+    document.getElementById("fasta_control").value="{{fasta}}";
+    document.getElementById("entry_control").value="{{entry}}";
+    document.getElementById("sort_control").value="{{sortby}}";
+    
+    function changeSearch() {
+        var searchControl = document.getElementById("search_control");
+        window.location = 'http://127.0.0.1:8000/music1/search/' + searchControl.value  + '/'
+        
+    }
+
+    function changeRow() {
+         
+        var changeRowControl = document.getElementById("change_row_control");
+        
+        window.location = 'http://127.0.0.1:8000/music1/setrow/' + changeRowControl.value  + '/'
+    
+    }
+
+    function click_show_more(value) {
+    	var fastaControl = document.getElementById("fasta_control");
+  var win=window.open(window.location, '_blank');
+    win.location = 'http://127.0.0.1:8000/music1/fasta/' + value  + '/'
+    
+    }
+ 
+    function show_entry(value) {
+    	var entryControl = document.getElementById("entry_control");
+    	var win = window.open(window.location, '_blank')
+    win.location = 'http://127.0.0.1:8000/music1/entry/' + value  + '/'
+   
+    }
+
+function changeSort(value) {
+	if(ascend == 1)
+    	str='sort_control_'+value;
+    var sortControl = document.getElementById(str).value;
+    window.location = 'http://127.0.0.1:8000/music1/sortby/' + sortControl  + '/'
+   // window.open(window.location)
+}
+       </script>
+<!---
+<script type="text/javascript">
+ 
+</script>
+-->
+{%endblock%}
+
+
+
+
+
+
+
+
+
