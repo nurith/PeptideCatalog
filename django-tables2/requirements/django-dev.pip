@@ -1,2 +1,0 @@
--r common.pip
-https://github.com/django/django/archive/1.11a1.zip
