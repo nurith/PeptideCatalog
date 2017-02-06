@@ -4,7 +4,7 @@ from django_tables2.utils import A
 from .models import Protein
 
 class ProteinTable(tables.Table):
-    protein_id = tables.LinkColumn( attrs={'a': {'target': '_blank'}}, )
+    protein_id = tables.LinkColumn('music1:detail',kwargs={'entry': A('pk')}, attrs={'a': {'target': '_blank'}}, )
     peptidedb_id = tables.LinkColumn('music1:peptidedb_redirect',kwargs={'pepdb': A('pk')}, attrs={'a': {'target': '_blank'}})
     uniprot_id = tables.LinkColumn('music1:uniprot_redirect',kwargs={'uni': A('pk')}, attrs={'a': {'target': '_blank'}})
     endonet_link =tables.LinkColumn('music1:endonet_redirect',kwargs={'endo': A('pk')}, attrs={'a': {'target': '_blank'}})

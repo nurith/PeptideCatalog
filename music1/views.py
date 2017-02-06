@@ -4,7 +4,6 @@ from django.http import HttpResponse
 from django.template import loader, Context
 
 from django.shortcuts import render
-from django.utils.lorem_ipsum import words
 from django.views.generic.base import TemplateView
 from django.views.generic.base import RedirectView
 from django_tables2 import SingleTableView
