@@ -26,5 +26,4 @@ urlpatterns = [
     url(r'^uniprot/(?P<uni>\w+)/$', music1_views.ViewUni.as_view(), name='uniprot_redirect'),
     url(r'^peptidedb/(?P<pepdb>\w+)/$', music1_views.ViewPeptideDB.as_view(), name='peptidedb_redirect'),
     url(r'^endonet/(?P<endo>\w+)/$', music1_views.ViewEndo.as_view(), name='endonet_redirect'),
-    url(r'^list/$', music1_views.filt_list),
 ]

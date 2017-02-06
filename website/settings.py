@@ -25,8 +25,8 @@ SECRET_KEY = 'eqthiz-ziuc(22kjl1_5mqy=r#hp)=8&hiohvov$bi*c10@$7z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+#ALLOWED_HOSTS = ['nurith.pythonanywhere.com']
 ALLOWED_HOSTS = []
-
 
 # Application definition
 

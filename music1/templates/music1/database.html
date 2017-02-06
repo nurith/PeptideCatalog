@@ -9,12 +9,13 @@
 <div class="container">
 <h3>Search:</h3>
 
+
 <form action="" method="get">
 {% crispy filter.form filter.form.helper %} </form>
 
 <br>
     Lines to display: 
-<select name="change_row_control" id="change_row_control" value= "{{row}}" onchange="changeRow()">
+<select name="change_row_control" id="change_row_control" value= "{{row}}" onchange="changeRow(this.value)">
     <option value="10">10</option>
     <option value="25">25</option>
     <option value="50">50</option>
@@ -169,16 +170,18 @@
     
     document.getElementById("change_row_control").value="{{row}}";
 
-    function changeRow() {     
-        var changeRowControl = document.getElementById("change_row_control");
-        window.location = 'http://127.0.0.1:8000/music1/setrow/' + changeRowControl.value  + '/'
+    function changeRow(val) {     
+    var changeRowControl = document.getElementById("change_row_control");
+    document.getElementById("change_row_control").value=val; 
+    var loc = "{{window.location.host}}"
+    window.location = loc + '/music1/setrow/' + val
     
     }
 </script>
 <!---
 <script type="text/javascript">
  
-
+  <!--     window.location = "{\% url music1:setrow " + val + " \%}";
 -->
 {%endblock%}
 

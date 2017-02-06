@@ -105,13 +105,8 @@ class ViewEndo(RedirectView):
         self.url = 'http://endonet.bioinf.med.uni-goettingen.de/hormone/%s' % (protein_list.endonet_link)
         return super(ViewEndo, self).get(request, **kwargs)
 
-
 def entry(request,entry):
     protein_list = Protein.objects.get(protein_id=entry)
     t = loader.get_template('music1/detail.html')
     c=Context({'protein_list': protein_list,'entry': entry,})
     return HttpResponse(t.render(c))
-
-def filt_list(request):
-    f = ProteinFilter(request.GET, queryset=Protein.objects.all())
-    return render(request, 'music1/database.html', {'filter': f, 'row':25})
