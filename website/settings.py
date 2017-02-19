@@ -23,10 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'eqthiz-ziuc(22kjl1_5mqy=r#hp)=8&hiohvov$bi*c10@$7z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['nurith.pythonanywhere.com']
-#ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['nurith.pythonanywhere.com']
+ALLOWED_HOSTS = []
 
 # Application definition
 

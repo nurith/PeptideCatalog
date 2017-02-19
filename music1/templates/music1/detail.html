@@ -10,17 +10,43 @@
  <br>
 
 <h4>Annotation</h4>
-{{protein_list.peptide_name}}  
+{{protein_list.peptide_name}}
+
+<h4>Attributes</h4>
+<table>
+    <tr>
+        <td>Known Fragments</td>
+        <td>Hormone</td>
+        <td>Pro-Peptide</td>
+        <td>Transcript</td>
+    </tr>
+    <tr>
+        <td>{{protein_list.known_fragments|yesno:"Yes,No"}}</td>
+        <td>{{protein_list.hormone|yesno:"Yes,No"}}</td>
+        <td>{{protein_list.pro_peptide|yesno:"Yes,No"}}</td>
+        <td>{{protein_list.transcript|yesno:"Yes,No"}}</td>
+    </tr>
+</table>
 
 <h4>Cross References</h4>
-{{protein_list.peptidedb_id|get_href1 |safe }}
-{{protein_list.uniprot_id|get_href |safe }}
-{{protein.endonet_link|get_href_endo |safe}}
-
+<table>
+    <tr>
+        <td>PeptideDB</td>
+        <td>{{protein_list.peptidedb_id|get_href1 |safe }}</td>
+    </tr>
+    <tr>
+        <td>Uniprot</td>
+        <td>{{protein_list.uniprot_id|get_href1 |safe }}</td>
+    </tr>
+    <tr>
+        <td>Endonet</td>
+        <td>{{protein_list.endonet_link|get_href1|safe }}</td>
+    </tr>
+</table>
 
 <h4>Sequence (FASTA format)</h4>
 {%if ">" not in protein_list.fasta %}
-<p style="width:720px; word-wrap:break-word;">>seq<br>{{protein_list.fasta}}</p>
+<p style="width:720px; word-wrap:break-word;">>seq {{protein_list.protein_id}}<br>{{protein_list.fasta}}</p>
 {%else%}
 <p style="width:720px; word-wrap:break-word;">{{protein_list.fasta}}</p>
 {%endif %}

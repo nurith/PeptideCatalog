@@ -52,7 +52,7 @@ class ProteinTableView(PagedFilteredTableView):
     formhelper_class = ProteinFilterFormHelper
 
     def get_table(self, **kwargs):
-        self.paginate_by = self.kwargs.get('row', 10)
+        self.paginate_by = self.kwargs.get('row', 25)
         return super(ProteinTableView, self).get_table()
 
 class SearchView(ProteinTableView):
