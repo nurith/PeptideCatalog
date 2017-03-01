@@ -13,6 +13,7 @@ class ProteinFilterFormHelper(FormHelper):
     layout = Layout(
                     Field('protein_id'),
                     Field('peptide_name'),
+                    Field('uniprot_id'),
                     
                     Submit('submit', 'Search')
                     )
