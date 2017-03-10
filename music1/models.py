@@ -26,10 +26,11 @@ class Protein(models.Model):
 
 class ProteinFilter(django_filters.FilterSet):
     peptide_name = django_filters.CharFilter(lookup_expr='contains')
+    uniprot_id = django_filters.CharFilter(lookup_expr='iexact')
     class Meta:
         model = Protein
         fields = {
             'protein_id': ['exact'],
             'peptide_name': ['contains'],
-            'uniprot_id': ['exact'],
+            'uniprot_id': ['iexact'],
 }
