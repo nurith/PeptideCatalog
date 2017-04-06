@@ -25,12 +25,13 @@ class Protein(models.Model):
         return reverse('views.detail' ,kwargs={'entry': self.pk})
 
 class ProteinFilter(django_filters.FilterSet):
+    protein_id = django_filters.CharFilter(lookup_expr='iexact')
     peptide_name = django_filters.CharFilter(lookup_expr='icontains')
     uniprot_id = django_filters.CharFilter(lookup_expr='iexact')
     class Meta:
         model = Protein
         fields = {
-            'protein_id': ['exact'],
+            'protein_id': ['iexact'],
             'peptide_name': ['icontains'],
             'uniprot_id': ['iexact'],
 }

@@ -14,7 +14,6 @@ class ProteinFilterFormHelper(FormHelper):
                     Field('protein_id'),
                     Field('peptide_name'),
                     Field('uniprot_id'),
-                    
                     Submit('submit', 'Search')
                     )
 
