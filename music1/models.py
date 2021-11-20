@@ -1,5 +1,4 @@
 from django.contrib.auth.models import Permission, User
-from django.core.urlresolvers import reverse
 from django.db import models
 import django_filters
 
@@ -22,16 +21,13 @@ class Protein(models.Model):
         return True
     
     def get_absolute_url(self):
-        return reverse('views.detail' ,kwargs={'entry': self.pk})
+            return 'entry/%s' % self.pk
 
 class ProteinFilter(django_filters.FilterSet):
-    protein_id = django_filters.CharFilter(lookup_expr='iexact')
-    peptide_name = django_filters.CharFilter(lookup_expr='icontains')
-    uniprot_id = django_filters.CharFilter(lookup_expr='iexact')
+    peptide_name = django_filters.CharFilter(lookup_expr='contains')
     class Meta:
         model = Protein
         fields = {
-            'protein_id': ['iexact'],
-            'peptide_name': ['icontains'],
-            'uniprot_id': ['iexact'],
+            'protein_id': ['exact'],
+            'peptide_name': ['contains'],
 }
