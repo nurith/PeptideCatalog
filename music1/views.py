@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.template import loader, Context
 
 from django.shortcuts import render
+from django.utils.lorem_ipsum import words
 from django.views.generic.base import TemplateView
 from django.views.generic.base import RedirectView
 from django_tables2 import SingleTableView
@@ -52,7 +53,7 @@ class ProteinTableView(PagedFilteredTableView):
     formhelper_class = ProteinFilterFormHelper
 
     def get_table(self, **kwargs):
-        self.paginate_by = self.kwargs.get('row', 25)
+        self.paginate_by = self.kwargs.get('row', 10)
         return super(ProteinTableView, self).get_table()
 
 class SearchView(ProteinTableView):
@@ -65,22 +66,22 @@ class SearchView(ProteinTableView):
 def index(request):
     t = loader.get_template('music1/index.html')
     c=Context()
-    return HttpResponse(t.render(c))
+    return HttpResponse(t.render(c.flatten()))
 
 def contact(request):
     t = loader.get_template('music1/contact.html')
     c=Context()
-    return HttpResponse(t.render(c))
+    return HttpResponse(t.render(c.flatten()))
 
 def contrib(request):
     t = loader.get_template('music1/contributors.html')
     c=Context()
-    return HttpResponse(t.render(c))
+    return HttpResponse(t.render(c.flatten()))
 
 def sequence(request,seq):
     protein_list = Protein.objects.get(protein_id=seq)
     t = loader.get_template('music1/fasta_seq.html')
-    c=Context({'all_proteins': protein_list})
+    c={'all_proteins': protein_list}
     return HttpResponse(t.render(c))
 
 class ViewUni(RedirectView):
@@ -104,8 +105,13 @@ class ViewEndo(RedirectView):
         self.url = 'http://endonet.bioinf.med.uni-goettingen.de/hormone/%s' % (protein_list.endonet_link)
         return super(ViewEndo, self).get(request, **kwargs)
 
+
 def entry(request,entry):
     protein_list = Protein.objects.get(protein_id=entry)
     t = loader.get_template('music1/detail.html')
-    c=Context({'protein_list': protein_list,'entry': entry,})
+    c={'protein_list': protein_list,'entry': entry,}
     return HttpResponse(t.render(c))
+
+def filt_list(request):
+    f = ProteinFilter(request.GET, queryset=Protein.objects.all())
+    return render(request, 'music1/database.html', {'filter': f, 'row':25})
