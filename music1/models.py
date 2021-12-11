@@ -30,4 +30,5 @@ class ProteinFilter(django_filters.FilterSet):
         fields = {
             'protein_id': ['exact'],
             'peptide_name': ['contains'],
+	    'uniprot_id': ['exact'],
 }

@@ -1,6 +1,5 @@
 *.pyc
 *~
 __pycache__
-file1.csv
 .DS_Store
 /static
