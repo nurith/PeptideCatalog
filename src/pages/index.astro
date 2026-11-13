@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { proteins } from '../data/proteins';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<BaseLayout title="PeptideCatalog">
+  <section class="home-hero">
+    <p class="eyebrow">Peptide and protein reference</p>
+    <h1>PeptideCatalog</h1>
+    <p class="hero-copy">
+      Browse peptide and protein records, cross-references, annotations, and sequences.
+      The catalog is generated from the project dataset.
+    </p>
+    <a class="button button-primary" href={`${base}database/`}>Browse the database</a>
+  </section>
+
+  <section class="summary-grid" aria-label="Catalog summary">
+    <div class="summary-card">
+      <span class="summary-value">{proteins.length.toLocaleString()}</span>
+      <span class="summary-label">catalog records</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-value">CSV</span>
+      <span class="summary-label">source data available in the repository</span>
+    </div>
+  </section>
+
+  <section class="content-panel">
+    <h2>About the catalog</h2>
+    <p>
+      The database table provides a compact overview. Open any entry to view its
+      attributes, cross-references, and sequence.
+    </p>
+    <p><a href={`${base}database/`}>Go to the peptide database →</a></p>
+  </section>
+</BaseLayout>

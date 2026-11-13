@@ -1,0 +1,156 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { proteins } from '../data/proteins';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const pageSize = 25;
+
+function searchText(protein) {
+  return [
+    protein.id,
+    protein.title,
+    protein.peptideDb,
+    protein.uniprot,
+    protein.endonet,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+}
+---
+
+<BaseLayout title="Database | PeptideCatalog">
+  <section class="catalog-heading">
+    <div>
+      <p class="eyebrow">Browse records</p>
+      <h1>Peptide database</h1>
+      <p class="muted">
+        {proteins.length.toLocaleString()} records. Select an entry to see its complete details and sequence.
+      </p>
+    </div>
+  </section>
+
+  <section class="content-panel catalog-panel">
+    <label class="search-label" for="catalog-search">Search by entry name or identifier</label>
+    <input
+      id="catalog-search"
+      class="search-input"
+      type="search"
+      placeholder="For example: insulin, PEP03024, or P01275"
+      autocomplete="off"
+    />
+
+    <div class="table-toolbar">
+      <p id="result-count" class="muted" aria-live="polite">
+        Showing {Math.min(pageSize, proteins.length).toLocaleString()} of {proteins.length.toLocaleString()} records
+      </p>
+      <div class="pagination" aria-label="Catalog pagination">
+        <button id="previous-page" class="page-button" type="button" disabled>Previous</button>
+        <span id="page-status" aria-live="polite">Page 1</span>
+        <button id="next-page" class="page-button" type="button">Next</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="catalog-table">
+        <thead>
+          <tr>
+            <th scope="col" class="id-column">Entry ID</th>
+            <th scope="col" class="name-column">Peptide / protein</th>
+            <th scope="col" class="xref-column">Cross-references</th>
+            <th scope="col" class="flags-column">Attributes</th>
+            <th scope="col" class="sequence-column">Sequence</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {proteins.map((protein, index) => (
+            <tr
+              data-search={searchText(protein)}
+              hidden={index >= pageSize}
+            >
+              <td class="record-id">AA{protein.id}</td>
+              <td class="record-name">
+                <a href={`${base}protein/AA${protein.id}/`}>{protein.title}</a>
+              </td>
+              <td class="xref-cell">
+                {protein.peptideDb && <div><span>PeptideDB</span> {protein.peptideDb}</div>}
+                {protein.uniprot && <div><span>UniProt</span> {protein.uniprot}</div>}
+                {protein.endonet && <div><span>EndoNet</span> {protein.endonet}</div>}
+                {!protein.peptideDb && !protein.uniprot && !protein.endonet && <span class="muted">—</span>}
+              </td>
+              <td class="flags-cell">
+                {protein.fragments && <span class="tag">Fragment</span>}
+                {protein.hormone && <span class="tag">Hormone</span>}
+                {protein.propeptide && <span class="tag">Pro-peptide</span>}
+                {protein.transcript && <span class="tag">Transcript</span>}
+                {!protein.fragments && !protein.hormone && !protein.propeptide && !protein.transcript && <span class="muted">—</span>}
+              </td>
+              <td>
+                <a class="sequence-link" href={`${base}protein/AA${protein.id}/`}>Show details</a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p id="no-results" class="no-results" hidden>No records match your search.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ pageSize }}>
+  const input = document.querySelector('#catalog-search');
+  const count = document.querySelector('#result-count');
+  const status = document.querySelector('#page-status');
+  const previous = document.querySelector('#previous-page');
+  const next = document.querySelector('#next-page');
+  const noResults = document.querySelector('#no-results');
+  const rows = Array.from(document.querySelectorAll('.catalog-table tbody tr'));
+
+  let currentPage = 1;
+  let filteredRows = rows;
+
+  function renderPage() {
+    const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize));
+    currentPage = Math.min(currentPage, pageCount);
+
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
+    const visibleRows = new Set(filteredRows.slice(start, end));
+
+    for (const row of rows) {
+      row.hidden = !visibleRows.has(row);
+    }
+
+    if (count) {
+      const shown = Math.min(end, filteredRows.length);
+      count.textContent = filteredRows.length
+        ? `Showing ${Math.min(start + 1, filteredRows.length)}–${shown} of ${filteredRows.length.toLocaleString()} records`
+        : 'Showing 0 records';
+    }
+
+    if (status) status.textContent = `Page ${currentPage} of ${pageCount}`;
+    if (previous) previous.disabled = currentPage <= 1;
+    if (next) next.disabled = currentPage >= pageCount;
+    if (noResults) noResults.hidden = filteredRows.length !== 0;
+  }
+
+  input?.addEventListener('input', () => {
+    const query = input.value.trim().toLowerCase();
+    filteredRows = rows.filter((row) => (row.dataset.search || '').includes(query));
+    currentPage = 1;
+    renderPage();
+  });
+
+  previous?.addEventListener('click', () => {
+    currentPage -= 1;
+    renderPage();
+  });
+
+  next?.addEventListener('click', () => {
+    currentPage += 1;
+    renderPage();
+  });
+
+  renderPage();
+</script>
