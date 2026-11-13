@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { proteins } from '../data/proteins';
+
+const featured = proteins.slice(0, 12);
+---
+<BaseLayout title="PeptideCatalog">
+  <section class="hero">
+    <p class="eyebrow">Data-first peptide catalog</p>
+    <h1>PeptideCatalog</h1>
+    <p class="lede">
+      A static, searchable catalog built from the project CSV. Each entry represents a peptide or
+      protein record with links to external references and sequence information.
+    </p>
+    <div class="actions">
+      <a class="button primary" href={`${import.meta.env.BASE_URL}database`}>Browse the catalog</a>
+      <a class="button secondary" href="https://github.com/nurith/PeptideCatalog/blob/master/file.csv">View raw data</a>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Latest entries</h2>
+    <div class="card-grid">
+      {featured.map((protein) => (
+        <article class="card">
+          <h3>{protein.title}</h3>
+          <p>{protein.peptideDb || protein.uniprot || 'No external ID recorded'}</p>
+          <a href={`${import.meta.env.BASE_URL}protein/${protein.slug}`}>View details</a>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

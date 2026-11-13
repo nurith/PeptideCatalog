@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { proteins } from '../../data/proteins';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
+export function getStaticPaths() {
+  return proteins.map((protein) => ({
+    params: { id: `AA${protein.id}` },
+    props: { protein },
+  }));
+}
+
+const { protein } = Astro.props;
+
+function accessions(value) {
+  return (value || '')
+    .split(/[\s,;]+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+const peptideIds = accessions(protein.peptideDb);
+const uniprotIds = accessions(protein.uniprot);
+const endonetIds = accessions(protein.endonet);
+
+const sequence = protein.sequence || '';
+const fasta = sequence.startsWith('>')
+  ? sequence
+  : `>seq AA${protein.id}\n${sequence}`;
+---
+
+<BaseLayout title={`AA${protein.id} · ${protein.title} | PeptideCatalog`}>
+  <article class="content-panel detail-panel">
+    <a class="back-link" href={`${base}database/`}>← Back to database</a>
+
+    <header class="detail-heading">
+      <p class="eyebrow">Catalog entry AA{protein.id}</p>
+      <h1>{protein.title}</h1>
+    </header>
+
+    <section class="detail-section">
+      <h2>Annotation</h2>
+      <p>{protein.title}</p>
+    </section>
+
+    <section class="detail-section">
+      <h2>Attributes</h2>
+      <dl class="detail-grid">
+        <div><dt>Known fragments</dt><dd>{protein.fragments ? 'Yes' : 'No'}</dd></div>
+        <div><dt>Hormone</dt><dd>{protein.hormone ? 'Yes' : 'No'}</dd></div>
+        <div><dt>Pro-peptide</dt><dd>{protein.propeptide ? 'Yes' : 'No'}</dd></div>
+        <div><dt>Transcript</dt><dd>{protein.transcript ? 'Yes' : 'No'}</dd></div>
+      </dl>
+    </section>
+
+    <section class="detail-section">
+      <h2>Cross-references</h2>
+      <dl class="reference-list">
+        <div>
+          <dt>PeptideDB</dt>
+          <dd>
+            {peptideIds.length ? peptideIds.map((id) => (
+              <a href={`https://www.peptides.be/index.php?p=peptide&peptide=${encodeURIComponent(id)}`} target="_blank" rel="noopener noreferrer">{id}</a>
+            )) : '—'}
+          </dd>
+        </div>
+        <div>
+          <dt>UniProt</dt>
+          <dd>
+            {uniprotIds.length ? uniprotIds.map((id) => (
+              <a href={`https://www.uniprot.org/uniprotkb/${encodeURIComponent(id)}/entry`} target="_blank" rel="noopener noreferrer">{id}</a>
+            )) : '—'}
+          </dd>
+        </div>
+        <div>
+          <dt>EndoNet</dt>
+          <dd>
+            {endonetIds.length ? endonetIds.map((id) => (
+              <a href={`https://endonet.bioinf.med.uni-goettingen.de/hormone/${encodeURIComponent(id)}`} target="_blank" rel="noopener noreferrer">{id}</a>
+            )) : '—'}
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="detail-section">
+      <h2>Sequence (FASTA format)</h2>
+      <pre class="sequence-box">{fasta || 'No sequence available.'}</pre>
+    </section>
+  </article>
+</BaseLayout>
