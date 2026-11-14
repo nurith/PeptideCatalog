@@ -128,7 +128,7 @@ h2 {
 
 .button-primary {
   background: #1769aa;
-  color: white;
+  color: #fff;
 }
 
 .button-primary:hover {
@@ -304,7 +304,7 @@ h2 {
 
 .record-id {
   color: var(--muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   white-space: nowrap;
 }
 
@@ -325,14 +325,13 @@ h2 {
   color: var(--muted);
 }
 
-.flags-cell {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+.catalog-table td.flags-cell {
+  display: table-cell;
 }
 
-.tag {
+.flags-cell .tag {
   display: inline-block;
+  margin: 0 4px 4px 0;
   padding: 2px 6px;
   border: 1px solid #d5e0ea;
   border-radius: 4px;
@@ -340,6 +339,7 @@ h2 {
   color: #425266;
   font-size: 0.74rem;
   white-space: nowrap;
+  text-align: center;
 }
 
 .sequence-link {
