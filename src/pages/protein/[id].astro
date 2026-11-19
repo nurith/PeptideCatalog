@@ -88,5 +88,140 @@ const fasta = sequence.startsWith('>')
       <h2>Sequence (FASTA format)</h2>
       <pre class="sequence-box">{fasta || 'No sequence available.'}</pre>
     </section>
+
+    <section class="detail-section edit-section">
+      <h2>Suggest an edit</h2>
+      <p class="muted">
+        This form prepares a GitHub issue for review. Submitting it will not directly change the live catalog;
+        a repository maintainer must review and apply the suggestion. For sequence changes, include the proposed
+        FASTA sequence in the issue after it opens.
+      </p>
+
+      <form
+        id="edit-suggestion-form"
+        class="edit-form"
+        data-record-id={`AA${protein.id}`}
+        data-current-title={protein.title}
+      >
+        <label>
+          Entry name
+          <input name="title" type="text" value={protein.title} required />
+        </label>
+
+        <label>
+          PeptideDB reference(s)
+          <input name="peptideDb" type="text" value={protein.peptideDb} />
+        </label>
+
+        <label>
+          UniProt reference(s)
+          <input name="uniprot" type="text" value={protein.uniprot} />
+        </label>
+
+        <label>
+          EndoNet reference(s)
+          <input name="endonet" type="text" value={protein.endonet} />
+        </label>
+
+        <fieldset>
+          <legend>Attributes</legend>
+          <label class="checkbox-label"><input name="fragments" type="checkbox" checked={protein.fragments} /> Known fragments</label>
+          <label class="checkbox-label"><input name="hormone" type="checkbox" checked={protein.hormone} /> Hormone</label>
+          <label class="checkbox-label"><input name="propeptide" type="checkbox" checked={protein.propeptide} /> Pro-peptide</label>
+          <label class="checkbox-label"><input name="transcript" type="checkbox" checked={protein.transcript} /> Transcript</label>
+        </fieldset>
+
+        <button class="button button-primary" type="submit">Continue to GitHub to submit suggestion</button>
+      </form>
+    </section>
   </article>
 </BaseLayout>
+
+<script>
+  const form = document.querySelector('#edit-suggestion-form');
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const data = new FormData(form);
+    const recordId = form.dataset.recordId || 'Catalog entry';
+    const currentTitle = form.dataset.currentTitle || '';
+    const value = (name) => String(data.get(name) || '').trim() || '—';
+    const checked = (name) => data.has(name) ? 'Yes' : 'No';
+
+    const body = [
+      `## Suggested catalog edit: ${recordId}`,
+      '',
+      `Current entry name: ${currentTitle}`,
+      '',
+      '### Proposed values',
+      `- Entry name: ${value('title')}`,
+      `- PeptideDB: ${value('peptideDb')}`,
+      `- UniProt: ${value('uniprot')}`,
+      `- EndoNet: ${value('endonet')}`,
+      `- Known fragments: ${checked('fragments')}`,
+      `- Hormone: ${checked('hormone')}`,
+      `- Pro-peptide: ${checked('propeptide')}`,
+      `- Transcript: ${checked('transcript')}`,
+      '',
+      'If this suggestion includes a sequence change, add the proposed FASTA sequence here.',
+      '',
+      'Please review this suggestion before changing the source CSV.',
+    ].join('\n');
+
+    const params = new URLSearchParams({
+      title: `Catalog edit suggestion for ${recordId}`,
+      body,
+    });
+
+    window.location.href = `https://github.com/nurith/PeptideCatalog/issues/new?${params.toString()}`;
+  });
+</script>
+
+<style>
+  .edit-section {
+    border-top: 1px solid var(--line);
+    padding-top: 24px;
+  }
+
+  .edit-form {
+    display: grid;
+    gap: 14px;
+    max-width: 640px;
+  }
+
+  .edit-form > label {
+    display: grid;
+    gap: 5px;
+    font-weight: 700;
+  }
+
+  .edit-form input[type='text'] {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 10px;
+    border: 1px solid #aeb9c6;
+    border-radius: 5px;
+    font: inherit;
+  }
+
+  .edit-form fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 12px;
+  }
+
+  .edit-form legend {
+    padding-inline: 5px;
+    font-weight: 700;
+  }
+
+  .checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+</style>
